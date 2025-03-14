@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather Viewer - Sign In</title>
+</head>
+<body>
+
+<form th:method="POST" th:action="@{/weather/ap/auth/login}" th:object="${userLoginDto}">
+    <label for="login">login</label>
+    <input type="text" th:field="*{login}" id="login">
+    <div style="color: red" th:field="${#fields.hasErrors('login')}" th:errors="*{login}">Invalid login</div>
+    <br/>
+
+    <label for="password">Password</label>
+    <input type="password" th:field="*{password}" id="password">
+    <div style="color: red" th:field="${#fields.hasErrors('password')}" th:errors="*{password}">Invalid password</div>
+    <br/>
+
+    <input type="submit" value="Sign In">
+    <br/>
+    <a th:href="@{/weather/ap/auth/register}">Sign up here</a>
+</form>
+</body>
+</html>
