@@ -7,8 +7,8 @@
 
 <body>
 
-<form method="POST" th:action="@{/sign-up}" th:object="${userRegisterDto}">
-    <label for="login">Username</label>
+<form method="POST" th:action="@{/weather/ap/auth/register}" th:object="${userRegisterDto}">
+    <label for="login">Login</label>
     <input type="text" th:field="*{login}" id="login">
     <div style="color: red" th:field="${#fields.hasErrors('login')}" th:errors="*{login}">Invalid login</div>
     <br/>
@@ -21,12 +21,12 @@
     <label for="password-confirm">Repeat Password</label>
     <input type="password" th:field="*{passwordConfirm}" id="password-confirm">
     <div style="color: red" th:field="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}">Invalid
-        password
+        password confirm
     </div>
     <br/>
     <input type="submit" value="Sign Up">
     <br/>
-    <a th:href="@{/sign-in}">Sign in here</a>
+    <a th:href="@{/weather/ap/auth/login}" methods="GET">Sign in here</a>
 </form>
 
 </body>
