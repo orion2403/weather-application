@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather Viewer - Sign Up</title>
+</head>
+
+<body>
+
+<form method="POST" th:action="@{/sign-up}" th:object="${userRegisterDto}">
+    <label for="login">Username</label>
+    <input type="text" th:field="*{login}" id="login">
+    <div style="color: red" th:field="${#fields.hasErrors('login')}" th:errors="*{login}">Invalid login</div>
+    <br/>
+
+    <label for="password">Password</label>
+    <input type="password" th:field="*{password}" id="password">
+    <div style="color: red" th:field="${#fields.hasErrors('password')}" th:errors="*{password}">Invalid password</div>
+    <br/>
+
+    <label for="password-confirm">Repeat Password</label>
+    <input type="password" th:field="*{passwordConfirm}" id="password-confirm">
+    <div style="color: red" th:field="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}">Invalid
+        password
+    </div>
+    <br/>
+    <input type="submit" value="Sign Up">
+    <br/>
+    <a th:href="@{/sign-in}">Sign in here</a>
+</form>
+
+</body>
+</html>
