@@ -56,7 +56,7 @@ public class RootConfiguration {
     @Bean
     public SpringLiquibase liquibase() {
         var liquibase = new SpringLiquibase();
-        liquibase.setChangeLog("classpath:resources/db.changelog/db.changelog-master.yaml");
+        liquibase.setChangeLog("classpath:db/changelog/db.changelog-master.yaml");
         liquibase.setDataSource(dataSource());
         return liquibase;
     }
