@@ -13,13 +13,13 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.orion.controller")
 @ComponentScan(basePackages = {
         "com.orion.controller",
         "com.orion.mapper",
         "com.orion.service"
 })
 @RequiredArgsConstructor
+@EnableTransactionManagement
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
