@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/weather/ap/auth")
 public class AuthController {
 
+    public static final String REGISTER = "register";
+    public static final String LOGIN = "login";
+    private final AuthService authService;
+
+
     @GetMapping("/register")
     public String showRegisterForm(@ModelAttribute UserRegisterDto userDto) {
         return "register";
