@@ -12,10 +12,7 @@ import org.mapstruct.MappingConstants;
 public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
-    User toUserFromUserLoginDto(UserLoginDto userLoginDto);
-
-    @Mapping(target = "id", ignore = true)
-    User toUserFromRegisterDto(UserRegisterDto userRegisterDto);
+    User toUserFromUserDto(UserDto userDto);
 
     UserResponseDto toUserResponseDtoFromUser(User user);
 }
