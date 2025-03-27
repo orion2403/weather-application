@@ -1,6 +1,6 @@
 package com.orion.mapper;
 
-import com.orion.dto.SessionDto;
+import com.orion.dto.response.SessionDto;
 import com.orion.model.Session;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -9,4 +9,6 @@ import org.mapstruct.MappingConstants;
 public interface SessionMapper {
 
     SessionDto toSessionDtoFromSession(Session session);
+
+    Session toSessionFromSessionDto(SessionDto sessionDto);
 }
