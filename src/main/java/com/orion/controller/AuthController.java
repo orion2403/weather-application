@@ -1,14 +1,12 @@
 package com.orion.controller;
 
-import com.orion.dto.SessionDto;
-import com.orion.dto.UserLoginDto;
-import com.orion.dto.UserRegisterDto;
+import com.orion.dto.request.UserRequestDto;
 import com.orion.service.AuthService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,47 +15,45 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    public static final String REGISTER = "register";
-    public static final String LOGIN = "login";
+    public static final String REGISTER_PAGE = "register";
+    public static final String LOGIN_PAGE = "login";
+    public static final String REDIRECT_TO_HOMEPAGE = "redirect:weather/ap/home";
+
     private final AuthService authService;
 
-
     @GetMapping("/register")
-    public String showRegisterForm(@ModelAttribute UserRegisterDto userRegisterDto) {
-        return "register";
-    }
-
-    @PostMapping("/register")
-    public String registerUser(@ModelAttribute @Valid UserRegisterDto userRegisterDto,
-                               BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return REGISTER;
-        }
-        authService.register(userRegisterDto);
-        return "redirect:/weather/auth/login";
+    public String showRegisterForm(Model model) {
+        model.addAttribute("userRequestDto", UserRequestDto.builder().build());
+        return REGISTER_PAGE;
     }
 
     @GetMapping("/login")
-    public String showLoginForm(@ModelAttribute UserLoginDto userLoginDto) {
-        return LOGIN;
+    public String showLoginForm(Model model) {
+        model.addAttribute("userRequestDto", UserRequestDto.builder().build());
+        return LOGIN_PAGE;
+    }
+
+    @PostMapping("/register")
+    public String register(@ModelAttribute UserRequestDto userRequestDto,
+                           BindingResult bindingResult,
+                           HttpServletResponse response) {
+        if (bindingResult.hasErrors()) {
+            return REGISTER_PAGE;
+        }
+
+        var registered = authService.register(userRequestDto);
+        return REDIRECT_TO_HOMEPAGE;
     }
 
     @PostMapping("/login")
-    public String login(@CookieValue(value = "session_id", defaultValue = "") String cookie,
-                        @ModelAttribute @Valid UserLoginDto userLoginDto,
+    public String login(@ModelAttribute("userDto") @Valid UserRequestDto userDto,
                         BindingResult bindingResult,
                         HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
-            return LOGIN;
+            return LOGIN_PAGE;
         }
-        var sessionDto = authService.login(userLoginDto);
-        createCookie(sessionDto, response);
-        return "home";
-    }
 
-    private void createCookie(SessionDto sessionDto, HttpServletResponse response) {
-        var cookie = new Cookie("session_id", sessionDto.id());
-        cookie.setAttribute("expires_at", sessionDto.expiresAt());
-        response.addCookie(cookie);
+        var loggedIn = authService.login(userDto);
+        return REDIRECT_TO_HOMEPAGE;
     }
 }
