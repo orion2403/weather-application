@@ -23,7 +23,7 @@ import java.util.Properties;
         "com.orion.mapper"
 })
 @RequiredArgsConstructor
-public class RootConfiguration {
+public class RootConfig {
 
     private final Environment environment;
 
