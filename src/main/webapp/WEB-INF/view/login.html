@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form th:method="POST" th:action="@{/weather/auth/login}" th:object="${userLoginDto}">
+<form th:method="POST" th:action="@{/weather/auth/login}" th:object="${userRequestDto}">
     <label for="login">login</label>
     <input type="text" th:field="*{login}" id="login">
     <div style="color: red" th:field="${#fields.hasErrors('login')}" th:errors="*{login}">Invalid login</div>
