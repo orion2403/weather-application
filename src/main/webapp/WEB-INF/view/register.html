@@ -7,7 +7,7 @@
 
 <body>
 
-<form method="POST" th:action="@{/weather/auth/register}" th:object="${userRegisterDto}">
+<form method="POST" th:action="@{/weather/auth/register}" th:object="${userRequestDto}">
     <label for="login">Login</label>
     <input type="text" th:field="*{login}" id="login">
     <div style="color: red" th:field="${#fields.hasErrors('login')}" th:errors="*{login}">Invalid login</div>
@@ -19,9 +19,9 @@
     <br/>
 
     <label for="password-confirm">Repeat Password</label>
-    <input type="password" th:field="*{passwordConfirm}" name="confirmPassword" id="password-confirm"
+    <input type="password" th:field="*{confirmPassword}" name="confirmPassword" id="password-confirm"
            onchange="onChange()">
-    <div style="color: red" th:field="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}">Invalid
+    <div style="color: red" th:field="${#fields.hasErrors('passwordConfirm')}" th:errors="*{confirmPassword}">Invalid
         password confirm
     </div>
     <br/>

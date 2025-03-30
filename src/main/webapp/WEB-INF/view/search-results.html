@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather Viewer - Search Results</title>
+</head>
+<body>
+<tr th:each="location: ${locations}">
+    <div>
+        <p th:text="${location.name()}">Name</p>
+        <p th:text="${location.latitude()}">Latitude</p>
+        <p th:text="${location.longitude()}">Longitude</p>
+        <p th:text="${location.country()}">Country</p>
+        <p th:text="${location.state()}">State</p>
+    </div>
+    <br/>
+</tr>
+</body>
+</html>
