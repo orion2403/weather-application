@@ -1,8 +1,7 @@
 package com.orion.mapper;
 
-import com.orion.dto.UserLoginDto;
-import com.orion.dto.UserRegisterDto;
-import com.orion.dto.UserResponseDto;
+import com.orion.dto.request.UserRequestDto;
+import com.orion.dto.response.UserResponseDto;
 import com.orion.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,7 +11,7 @@ import org.mapstruct.MappingConstants;
 public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
-    User toUserFromUserDto(UserDto userDto);
+    User toUserFromUserDto(UserRequestDto userDto);
 
     UserResponseDto toUserResponseDtoFromUser(User user);
 }
