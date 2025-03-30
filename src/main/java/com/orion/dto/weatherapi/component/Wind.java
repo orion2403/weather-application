@@ -1,13 +1,11 @@
 package com.orion.dto.weatherapi.component;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.math.BigDecimal;
 
-@Getter
-@Setter
-public class Wind {
+public record Wind(
 
-    private Double speed;
-    private Integer deg;
-    private Double gust;
+        BigDecimal speed,
+        Integer deg,
+        BigDecimal gust
+) {
 }

@@ -1,12 +1,10 @@
 package com.orion.dto.weatherapi.component;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.math.BigDecimal;
 
-@Getter
-@Setter
-public class Coord {
+public record Coord(
 
-    private Double lon;
-    private Double lat;
+        BigDecimal lon,
+        BigDecimal lat
+) {
 }
