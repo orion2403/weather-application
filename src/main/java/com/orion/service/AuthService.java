@@ -1,75 +1,69 @@
 package com.orion.service;
 
-import com.orion.dto.SessionDto;
-import com.orion.dto.UserLoginDto;
-import com.orion.dto.UserRegisterDto;
+import com.orion.dto.request.UserRequestDto;
+import com.orion.dto.response.UserResponseDto;
 import com.orion.exception.IncorrectPasswordEnteredException;
 import com.orion.exception.UserAlreadyExistException;
 import com.orion.exception.UserNotFoundException;
-import com.orion.mapper.SessionMapper;
 import com.orion.mapper.UserMapper;
-import com.orion.model.Session;
 import com.orion.model.User;
-import com.orion.repository.SessionRepository;
 import com.orion.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthService {
 
-    private static final Long SESSION_LIFETIME = 24L;
     private final UserRepository userRepository;
-    private final SessionRepository sessionRepository;
     private final UserMapper userMapper;
-    private final SessionMapper sessionMapper;
 
-    public void register(UserRegisterDto userRegisterDto) {
-        var user = userMapper.toUserFromRegisterDto(userRegisterDto);
+    @Transactional
+    public UserResponseDto register(UserRequestDto userRequestDto) {
+        var user = userMapper.toUserFromUserDto(userRequestDto);
         user.setPassword(hashPassword(user.getPassword()));
 
         if (userRepository.findByLogin(user.getLogin()).isPresent()) {
-            throw new UserAlreadyExistException("User with this login already exists");
+            throw new UserAlreadyExistException("User with login: " + user.getLogin() + " already exists");
         }
 
-        userRepository.save(user);
+        var savedUser = userRepository.save(user);
+        return userMapper.toUserResponseDtoFromUser(savedUser);
     }
 
-
-    public SessionDto login(UserLoginDto userLoginDto) {
-        var user = userMapper.toUserFromUserLoginDto(userLoginDto);
+    @Transactional
+    public UserResponseDto login(UserRequestDto userRequestDto) {
+        var user = userMapper.toUserFromUserDto(userRequestDto);
         user.setPassword(hashPassword(user.getPassword()));
+
         var maybeUser = userRepository.findByLogin(user.getLogin());
 
         if (maybeUser.isEmpty()) {
             throw new UserNotFoundException("User with this login not found");
         }
-        if (!BCrypt.checkpw(userLoginDto.password(), maybeUser.get().getPassword())) {
+        if (!matches(userRequestDto.getPassword(), maybeUser.get().getPassword())) {
             throw new IncorrectPasswordEnteredException("You entered the wrong password");
         }
 
-        var session = sessionRepository.save(createSession(maybeUser.get()));
-        return sessionMapper.toSessionDtoFromSession(session);
+        return userMapper.toUserResponseDtoFromUser(maybeUser.get());
+    }
+
+    public UserResponseDto findById(Long id) {
+        Optional<User> maybeUser = userRepository.findById(id);
+        maybeUser.orElseThrow(() -> new UserNotFoundException("User with this id not found"));
+        return userMapper.toUserResponseDtoFromUser(maybeUser.get());
     }
 
     private String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    private Session createSession(User user) {
-        return Session.builder()
-                .id(UUID.randomUUID())
-                .user(user)
-                .expiresAt(LocalDateTime.now().plusHours(SESSION_LIFETIME))
-                .build();
+    private boolean matches(String enteredPassword, String passwordFromDatabase) {
+        return BCrypt.checkpw(enteredPassword, passwordFromDatabase);
     }
-
 }
